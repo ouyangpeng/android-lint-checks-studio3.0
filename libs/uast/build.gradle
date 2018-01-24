@@ -1,0 +1,18 @@
+apply plugin: 'java'
+
+group = 'com.android.tools.external.org-jetbrains'
+archivesBaseName = 'uast'
+version = rootProject.ext.baseVersion
+
+jar {
+    from zipTree("../../../../../prebuilts/tools/common/uast/1.0/uast-common-1.0.jar")
+    from zipTree("../../../../../prebuilts/tools/common/uast/1.0/uast-java-1.0.jar")
+}
+
+project.ext.pomName = 'Unified AST'
+project.ext.pomDesc = 'Unified AST'
+
+apply from: "$rootDir/buildSrc/base/publish.gradle"
+apply from: "$rootDir/buildSrc/base/bintray.gradle"
+apply from: "$rootDir/buildSrc/base/javadoc.gradle"
+

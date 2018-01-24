@@ -1,0 +1,24 @@
+apply plugin: 'java'
+
+group = 'com.android.tools.external.com-intellij'
+archivesBaseName = 'intellij-core'
+version = rootProject.ext.baseVersion
+
+dependencies {
+    compile 'org.jetbrains.trove4j:trove4j:20160824'
+}
+
+jar {
+    from zipTree("../../../../../prebuilts/tools/common/intellij-core/171.4249.32/intellij-core.jar")
+    from zipTree("../../../../../prebuilts/tools/common/intellij-core/171.4249.32/picocontainer.jar")
+    from zipTree("../../../../../prebuilts/tools/common/intellij-core/171.4249.32/annotations.jar")
+    from zipTree("../../../../../prebuilts/tools/common/intellij-core/171.4249.32/asm-all.jar")
+}
+
+project.ext.pomName = 'IntelliJ IDEA Core'
+project.ext.pomDesc = 'IntelliJ IDEA Core'
+
+apply from: "$rootDir/buildSrc/base/publish.gradle"
+apply from: "$rootDir/buildSrc/base/bintray.gradle"
+apply from: "$rootDir/buildSrc/base/javadoc.gradle"
+

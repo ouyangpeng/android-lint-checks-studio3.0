@@ -1,0 +1,85 @@
+load("//tools/base/bazel:kotlin.bzl", "kotlin_library", "kotlin_test")
+load("//tools/base/bazel:maven.bzl", "maven_pom")
+
+kotlin_library(
+    name = "lint-tests",
+    srcs = ["src/main/java"],
+    pom = ":pom",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//prebuilts/tools/common/intellij-core:intellij-core-171.4249.32",
+        "//prebuilts/tools/common/uast:uast-171.4249.32",
+        "//tools/base/annotations",
+        "//tools/base/build-system/builder-model",
+        "//tools/base/common:tools.common",
+        "//tools/base/layoutlib-api:tools.layoutlib-api",
+        "//tools/base/lint:tools.lint-api",
+        "//tools/base/lint:tools.lint-checks",
+        "//tools/base/lint/cli",
+        "//tools/base/sdk-common:tools.sdk-common",
+        "//tools/base/sdklib:tools.sdklib",
+        "//tools/base/testutils:tools.testutils",
+        "//tools/base/third_party:com.google.guava_guava",
+        "//tools/base/third_party:com.intellij_annotations",
+        "//tools/base/third_party:junit_junit",
+        "//tools/base/third_party:org.eclipse.jdt.core.compiler_ecj",
+        "//tools/base/third_party:org.jetbrains.kotlin_kotlin-stdlib",
+        "//tools/base/third_party:org.jetbrains.trove4j_trove4j",
+        "//tools/base/third_party:org.mockito_mockito-core",
+        "//tools/base/third_party:org.ow2.asm_asm",
+    ],
+)
+
+kotlin_test(
+    name = "tests",
+    srcs = ["src/test/java"],
+    data = [
+        "//prebuilts/studio/sdk:platform-tools",
+        "//prebuilts/studio/sdk:platforms/latest",
+        "//prebuilts/studio/sdk:typos",
+        "//tools/adt/idea/android/annotations",
+        "//tools/base/files/typos",
+    ],
+    jvm_flags = [
+        "-Dtest.suite.jar=tests.jar",
+        # TODO: Inject the cache directory into tests.
+        "-Duser.home=/tmp",
+    ],
+    test_class = "com.android.testutils.JarTestSuite",
+    deps = [
+        ":lint-tests",
+        "//prebuilts/tools/common/intellij-core:intellij-core-171.4249.32",
+        "//prebuilts/tools/common/m2/repository/org/mockito/mockito-all/1.9.5:jar",
+        "//prebuilts/tools/common/uast:uast-171.4249.32",
+        "//tools/base/annotations",
+        "//tools/base/build-system:tools.manifest-merger",
+        "//tools/base/build-system/builder-model",
+        "//tools/base/common:tools.common",
+        "//tools/base/layoutlib-api:tools.layoutlib-api",
+        "//tools/base/lint:tools.lint-api",
+        "//tools/base/lint:tools.lint-checks",
+        "//tools/base/lint/cli",
+        "//tools/base/repository:tools.repository",
+        "//tools/base/sdk-common:tools.sdk-common",
+        "//tools/base/sdklib:tools.sdklib",
+        "//tools/base/testutils:tools.testutils",
+        "//tools/base/third_party:com.android.tools.external.lombok_lombok-ast",
+        "//tools/base/third_party:com.google.code.gson_gson",
+        "//tools/base/third_party:com.google.truth_truth",
+        "//tools/base/third_party:com.intellij_annotations",
+        "//tools/base/third_party:junit_junit",
+        "//tools/base/third_party:net.sf.kxml_kxml2",
+        "//tools/base/third_party:org.codehaus.groovy_groovy-all",
+        "//tools/base/third_party:org.eclipse.jdt.core.compiler_ecj",
+        "//tools/base/third_party:org.jetbrains.kotlin_kotlin-stdlib",
+        "//tools/base/third_party:org.jetbrains.trove4j_trove4j",
+        "//tools/base/third_party:org.ow2.asm_asm-tree",
+    ],
+)
+
+maven_pom(
+    name = "pom",
+    artifact = "lint-tests",
+    group = "com.android.tools.lint",
+    source = "//tools/buildSrc/base:build_version",
+)
